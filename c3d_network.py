@@ -1,19 +1,17 @@
 import tensorflow as tf
 from tensorflow.python import pywrap_tensorflow
-import numpy as np
+
+class_label = {"Archery": 0, "BabyCrawling": 1, "BasketballShooting": 2, "BenchPress": 3, "Biking": 4,
+               "BlowingCandles": 5, "Bowling": 6, "BreatStroke": 7, "CleanAndJerk": 8, "CliffDiving": 9,
+               "Drumming": 10, "FrisbeeCatch": 11, "GolfSwing": 12, "Haircut": 13, "HeadMassage": 14,
+               "HighJump": 15, "HorseRiding": 16, "Hug": 17, "HulaHoop": 18, "JumpRope": 19,
+               "Kayaking": 20, "Kiss": 21, "Laugh": 22, "LongJump": 23, "Marching": 24,
+               "PlayingCello": 25, "PlayingGuitar": 26, "PlayingPiano": 27, "PlayingViolin": 28, "PoleVault": 29,
+               "PullUps": 30, "PushUps": 31, "ShakingHands": 32, "SitUp": 33, "Skiing": 34,
+               "Skijet": 35, "SkyDiving": 36, "SoccerJuggling": 37, "SoccerShooting": 38, "Somersault": 39,
+               "TaiChi": 40, "ThrowDiscus": 41, "TrampolineJumping": 42, "WalkingWithDog": 43, "WashingHair": 44}
 
 class C3D_Network(object):
-
-    class_label = {"Archery": 0, "BabyCrawling": 1, "BasketballShooting": 2, "BenchPress": 3, "Biking": 4,
-                   "BlowingCandles": 5, "Bowling": 6, "BreatStroke": 7, "CleanAndJerk": 8, "CliffDiving": 9,
-                   "Drumming": 10, "FrisbeeCatch": 11, "GolfSwing": 12, "Haircut": 13, "HeadMassage": 14,
-                   "HighJump": 15, "HorseRiding": 16, "Hug": 17, "HulaHoop": 18, "JumpRope": 19,
-                   "Kayaking": 20, "Kiss": 21, "Laugh": 22, "LongJump": 23, "Marching": 24,
-                   "PlayingCello": 25, "PlayingGuitar": 26, "PlayingPiano": 27, "PlayingViolin": 28,"PoleVault": 29,
-                   "PullUps": 30, "PushUps": 31, "ShakingHands": 32, "SitUp": 33, "Skiing": 34,
-                   "Skijet": 35, "SkyDiving": 36, "SoccerJuggling": 37, "SoccerShooting": 38, "Somersault": 39,
-                   "TaiChi": 40, "ThrowDiscus": 41, "TrampolineJumping": 42, "WalkingWithDog": 43, "WashingHair": 44}
-
     num_classes = len(class_label.keys())
     pretrain_model_path = './models/pretrain/sports1m_finetuning_ucf101.model'
 
