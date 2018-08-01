@@ -1,4 +1,6 @@
 import tensorflow as tf
+from tensorflow.python import pywrap_tensorflow
+import numpy as np
 
 class C3D_Network(object):
 
@@ -13,6 +15,7 @@ class C3D_Network(object):
                    "TaiChi": 40, "ThrowDiscus": 41, "TrampolineJumping": 42, "WalkingWithDog": 43, "WashingHair": 44}
 
     num_classes = len(class_label.keys())
+    pretrain_model_path = './models/pretrain/sports1m_finetuning_ucf101.model'
 
     def __init__(self, x, batchsize, dropout_prob=1, trainable=False):
         """
@@ -22,37 +25,40 @@ class C3D_Network(object):
         :param dropout_prob:
         :param trainable:
         """
-        print(self.num_classes)
+        # 获取训练的参数
+        reader = pywrap_tensorflow.NewCheckpointReader(self.pretrain_model_path)
+        self._var_to_shape_map = reader.get_variable_to_shape_map()
+
         self._parameters_config(trainable)
 
         # Convolution Layer 1
-        conv1 = self._conv3d('conv1', x, self._weights['wc1'], self._biases['bc1'])
+        conv1 = self._conv3d('conv1', x, self._paramter('var_name/wc1'), self._paramter('var_name/bc1'))
         conv1 = tf.nn.relu(conv1, 'relu1')
         pool1 = self._max_pool('pool1', conv1, k=1)
 
         # Convolution Layer 2
-        conv2 = self._conv3d('conv2', pool1, self._weights['wc2'], self._biases['bc2'])
+        conv2 = self._conv3d('conv2', pool1, self._paramter('var_name/wc2'), self._paramter('var_name/bc2'))
         conv2 = tf.nn.relu(conv2, 'relu2')
         pool2 = self._max_pool('pool2', conv2, k=2)
 
         # Convolution Layer 3,4
-        conv3 = self._conv3d('conv3a', pool2, self._weights['wc3a'], self._biases['bc3a'])
+        conv3 = self._conv3d('conv3a', pool2, self._paramter('var_name/wc3a'), self._paramter('var_name/bc3a'))
         conv3 = tf.nn.relu(conv3, 'relu3a')
-        conv3 = self._conv3d('conv3b', conv3, self._weights['wc3b'], self._biases['bc3b'])
+        conv3 = self._conv3d('conv3b', conv3, self._paramter('var_name/wc3b'), self._paramter('var_name/bc3b'))
         conv3 = tf.nn.relu(conv3, 'relu3b')
         pool3 = self._max_pool('pool3', conv3, k=2)
 
         # Convolution Layer 5,6
-        conv4 = self._conv3d('conv4a', pool3, self._weights['wc4a'], self._biases['bc4a'])
+        conv4 = self._conv3d('conv4a', pool3, self._paramter('var_name/wc4a'), self._paramter('var_name/bc4a'))
         conv4 = tf.nn.relu(conv4, 'relu4a')
-        conv4 = self._conv3d('conv4b', conv4, self._weights['wc4b'], self._biases['bc4b'])
+        conv4 = self._conv3d('conv4b', conv4, self._paramter('var_name/wc4b'), self._paramter('var_name/bc4b'))
         conv4 = tf.nn.relu(conv4, 'relu4b')
         pool4 = self._max_pool('pool4', conv4, k=2)
 
         # Convolution Layer 7,8
-        conv5 = self._conv3d('conv5a', pool4, self._weights['wc5a'], self._biases['bc5a'])
+        conv5 = self._conv3d('conv5a', pool4, self._paramter('var_name/wc5a'), self._paramter('var_name/bc5a'))
         conv5 = tf.nn.relu(conv5, 'relu5a')
-        conv5 = self._conv3d('conv5b', conv5, self._weights['wc5b'], self._biases['bc5b'])
+        conv5 = self._conv3d('conv5b', conv5, self._paramter('var_name/wc5b'), self._paramter('var_name/bc5b'))
         conv5 = tf.nn.relu(conv5, 'relu5b')
         pool5 = self._max_pool('pool5', conv5, k=2)
 
@@ -83,29 +89,13 @@ class C3D_Network(object):
 
         with tf.variable_scope('var_name'):
             self._weights = {
-                'wc1': self._variable_with_weight_decay('wc1', [3, 3, 3, 3, 64], 0.04, punish_lambda),
-                'wc2': self._variable_with_weight_decay('wc2', [3, 3, 3, 64, 128], 0.04, punish_lambda),
-                'wc3a': self._variable_with_weight_decay('wc3a', [3, 3, 3, 128, 256], 0.04, punish_lambda),
-                'wc3b': self._variable_with_weight_decay('wc3b', [3, 3, 3, 256, 256], 0.04, punish_lambda),
-                'wc4a': self._variable_with_weight_decay('wc4a', [3, 3, 3, 256, 512], 0.04, punish_lambda),
-                'wc4b': self._variable_with_weight_decay('wc4b', [3, 3, 3, 512, 512], 0.04, punish_lambda),
-                'wc5a': self._variable_with_weight_decay('wc5a', [3, 3, 3, 512, 512], 0.04, punish_lambda),
-                'wc5b': self._variable_with_weight_decay('wc5b', [3, 3, 3, 512, 512], 0.04, punish_lambda),
                 'wd1': self._variable_with_weight_decay('wd1', [8192, 4096], 0.04, punish_lambda),
-                'wd2': self._variable_with_weight_decay('wd2', [4096, 4096], 0.04, punish_lambda),
-                'out': self._variable_with_weight_decay('wout', [4096, self.num_classes], 0.04, punish_lambda)
+                'wd2': self._variable_with_weight_decay('wd2', [4096, 1024], 0.04, punish_lambda),
+                'out': self._variable_with_weight_decay('wout', [1024, self.num_classes], 0.04, punish_lambda)
             }
             self._biases = {
-                'bc1': self._variable_with_weight_decay('bc1', [64], 0.04, None),
-                'bc2': self._variable_with_weight_decay('bc2', [128], 0.04, None),
-                'bc3a': self._variable_with_weight_decay('bc3a', [256], 0.04, None),
-                'bc3b': self._variable_with_weight_decay('bc3b', [256], 0.04, None),
-                'bc4a': self._variable_with_weight_decay('bc4a', [512], 0.04, None),
-                'bc4b': self._variable_with_weight_decay('bc4b', [512], 0.04, None),
-                'bc5a': self._variable_with_weight_decay('bc5a', [512], 0.04, None),
-                'bc5b': self._variable_with_weight_decay('bc5b', [512], 0.04, None),
                 'bd1': self._variable_with_weight_decay('bd1', [4096], 0.04, None),
-                'bd2': self._variable_with_weight_decay('bd2', [4096], 0.04, None),
+                'bd2': self._variable_with_weight_decay('bd2', [1024], 0.04, None),
                 'out': self._variable_with_weight_decay('bout', [self.num_classes], 0.04, None),
             }
 
@@ -143,3 +133,13 @@ class C3D_Network(object):
             weight_decay = tf.nn.l2_loss(var) * punish_lambda
             tf.add_to_collection('losses', weight_decay)
         return var
+
+    def _paramter(self, name):
+        """
+        根据name从pretrain模型中加载数据
+        :param name:
+        :return:
+        """
+        assert name in self._var_to_shape_map.keys(), '找不着'+name+'参数'
+        return self._var_to_shape_map[name]
+
