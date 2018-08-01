@@ -10,13 +10,20 @@ class C3D_Network(object):
                    "PlayingCello": 25, "PlayingGuitar": 26, "PlayingPiano": 27, "PlayingViolin": 28,"PoleVault": 29,
                    "PullUps": 30, "PushUps": 31, "ShakingHands": 32, "SitUp": 33, "Skiing": 34,
                    "Skijet": 35, "SkyDiving": 36, "SoccerJuggling": 37, "SoccerShooting": 38, "Somersault": 39,
-                   "TaiChi": 40, "ThrowDiscus": 41, "TrampolineJumping": 42, "WalkingWithDog": 43, "WashingHair": 44,}
+                   "TaiChi": 40, "ThrowDiscus": 41, "TrampolineJumping": 42, "WalkingWithDog": 43, "WashingHair": 44}
 
-    num_classes = 45
-    channels = 3
+    num_classes = len(class_label.keys())
 
-    def __init__(self, x, batchsize, dropout_prob):
-        self._parameters_config()
+    def __init__(self, x, batchsize, dropout_prob=1, trainable=False):
+        """
+        构造函数
+        :param x:
+        :param batchsize:
+        :param dropout_prob:
+        :param trainable:
+        """
+        print(self.num_classes)
+        self._parameters_config(trainable)
 
         # Convolution Layer 1
         conv1 = self._conv3d('conv1', x, self._weights['wc1'], self._biases['bc1'])
@@ -63,20 +70,30 @@ class C3D_Network(object):
         # Output: class prediction
         out = tf.matmul(dense2, self._weights['out']) + self._biases['out']
 
-    def _parameters_config(self):
+    def _parameters_config(self, trainable):
+        """
+        参数配置
+        :param trainable: 如果是true，有惩罚参数，否则无惩罚参数
+        :return:
+        """
+        if trainable:
+            punish_lambda = 0.0005
+        else:
+            punish_lambda = None
+
         with tf.variable_scope('var_name'):
             self._weights = {
-                'wc1': self._variable_with_weight_decay('wc1', [3, 3, 3, 3, 64], 0.04, None),
-                'wc2': self._variable_with_weight_decay('wc2', [3, 3, 3, 64, 128], 0.04, None),
-                'wc3a': self._variable_with_weight_decay('wc3a', [3, 3, 3, 128, 256], 0.04, None),
-                'wc3b': self._variable_with_weight_decay('wc3b', [3, 3, 3, 256, 256], 0.04, None),
-                'wc4a': self._variable_with_weight_decay('wc4a', [3, 3, 3, 256, 512], 0.04, None),
-                'wc4b': self._variable_with_weight_decay('wc4b', [3, 3, 3, 512, 512], 0.04, None),
-                'wc5a': self._variable_with_weight_decay('wc5a', [3, 3, 3, 512, 512], 0.04, None),
-                'wc5b': self._variable_with_weight_decay('wc5b', [3, 3, 3, 512, 512], 0.04, None),
-                'wd1': self._variable_with_weight_decay('wd1', [8192, 4096], 0.04, 0.001),
-                'wd2': self._variable_with_weight_decay('wd2', [4096, 4096], 0.04, 0.002),
-                'out': self._variable_with_weight_decay('wout', [4096, self.num_classes], 0.04, 0.005)
+                'wc1': self._variable_with_weight_decay('wc1', [3, 3, 3, 3, 64], 0.04, punish_lambda),
+                'wc2': self._variable_with_weight_decay('wc2', [3, 3, 3, 64, 128], 0.04, punish_lambda),
+                'wc3a': self._variable_with_weight_decay('wc3a', [3, 3, 3, 128, 256], 0.04, punish_lambda),
+                'wc3b': self._variable_with_weight_decay('wc3b', [3, 3, 3, 256, 256], 0.04, punish_lambda),
+                'wc4a': self._variable_with_weight_decay('wc4a', [3, 3, 3, 256, 512], 0.04, punish_lambda),
+                'wc4b': self._variable_with_weight_decay('wc4b', [3, 3, 3, 512, 512], 0.04, punish_lambda),
+                'wc5a': self._variable_with_weight_decay('wc5a', [3, 3, 3, 512, 512], 0.04, punish_lambda),
+                'wc5b': self._variable_with_weight_decay('wc5b', [3, 3, 3, 512, 512], 0.04, punish_lambda),
+                'wd1': self._variable_with_weight_decay('wd1', [8192, 4096], 0.04, punish_lambda),
+                'wd2': self._variable_with_weight_decay('wd2', [4096, 4096], 0.04, punish_lambda),
+                'out': self._variable_with_weight_decay('wout', [4096, self.num_classes], 0.04, punish_lambda)
             }
             self._biases = {
                 'bc1': self._variable_with_weight_decay('bc1', [64], 0.04, None),
@@ -87,16 +104,32 @@ class C3D_Network(object):
                 'bc4b': self._variable_with_weight_decay('bc4b', [512], 0.04, None),
                 'bc5a': self._variable_with_weight_decay('bc5a', [512], 0.04, None),
                 'bc5b': self._variable_with_weight_decay('bc5b', [512], 0.04, None),
-                'bd1': self._variable_with_weight_decay('bd1', [4096], 0.04, 0.0),
-                'bd2': self._variable_with_weight_decay('bd2', [4096], 0.04, 0.0),
-                'out': self._variable_with_weight_decay('bout', [self.num_classes], 0.04, 0.0),
+                'bd1': self._variable_with_weight_decay('bd1', [4096], 0.04, None),
+                'bd2': self._variable_with_weight_decay('bd2', [4096], 0.04, None),
+                'out': self._variable_with_weight_decay('bout', [self.num_classes], 0.04, None),
             }
 
     def _conv3d(self, name, input, filter, bias):
+        """
+        3D卷积
+        :param name:
+        :param input: shape = [batch, depth, width, height, channels]
+        :param filter: shape = [depth, width, height, in_channels, out_channels]
+        :param bias:
+        :return:
+        """
         res_conv = tf.nn.conv3d(input, filter, [1, 1, 1, 1], padding="SAME", name=name)
         res = tf.nn.bias_add(res_conv, bias)
         return res
     def _max_pool(self, name, input, k):
+        """
+        3D max_pool
+        :param name:
+        :param input: shape = [batch, depth, width, height, channels]
+        :param k:
+        :return:
+        """
+        # ksize shape = [batch, depth, w, h, channels]
         return tf.nn.max_pool3d(input, ksize=[1, k, 2, 2, 1], strides=[1, k, 2, 2, 1], padding="SAME", name=name)
 
     def _variable_on_cpu(self, name, shape, initializer):
@@ -110,6 +143,3 @@ class C3D_Network(object):
             weight_decay = tf.nn.l2_loss(var) * punish_lambda
             tf.add_to_collection('losses', weight_decay)
         return var
-
-
-
