@@ -27,11 +27,14 @@ class C3D_Network(object):
         """
         # 获取训练的参数
         self._reader = pywrap_tensorflow.NewCheckpointReader(self.pretrain_model_path)
-
+        self._x = x
+        self._batch_size = batchsize
+        self._dropout_prob = dropout_prob
         self._parameters_config(trainable)
 
+    def contruct_graph(self):
         # Convolution Layer 1
-        conv1 = self._conv3d('conv1', x, self._paramter('var_name/wc1'), self._paramter('var_name/bc1'))
+        conv1 = self._conv3d('conv1', self._x, self._paramter('var_name/wc1'), self._paramter('var_name/bc1'))
         conv1 = tf.nn.relu(conv1, 'relu1')
         pool1 = self._max_pool('pool1', conv1, k=1)
 
@@ -63,17 +66,19 @@ class C3D_Network(object):
 
         # Fully connected layer
         pool5 = tf.transpose(pool5, perm=[0, 1, 4, 2, 3])
-        dense1 = tf.reshape(pool5, [batchsize, self._weights['wd1'].get_shape().as_list()[0]])  # Reshape conv3 output to fit dense layer input
+        dense1 = tf.reshape(pool5, [self._batch_size, self._weights['wd1'].get_shape().as_list()[0]])  # Reshape conv3 output to fit dense layer input
         dense1 = tf.matmul(dense1, self._weights['wd1']) + self._biases['bd1']
 
         dense1 = tf.nn.relu(dense1, name='fc1')  # Relu activation
-        dense1 = tf.nn.dropout(dense1, dropout_prob)
+        dense1 = tf.nn.dropout(dense1, self._dropout_prob)
 
         dense2 = tf.nn.relu(tf.matmul(dense1, self._weights['wd2']) + self._biases['bd2'], name='fc2')  # Relu activation
-        dense2 = tf.nn.dropout(dense2, dropout_prob)
+        dense2 = tf.nn.dropout(dense2, self._dropout_prob)
 
         # Output: class prediction
         out = tf.matmul(dense2, self._weights['out']) + self._biases['out']
+
+        return out
 
     def _parameters_config(self, trainable):
         """
