@@ -26,8 +26,7 @@ class C3D_Network(object):
         :param trainable:
         """
         # 获取训练的参数
-        reader = pywrap_tensorflow.NewCheckpointReader(self.pretrain_model_path)
-        self._var_to_shape_map = reader.get_variable_to_shape_map()
+        self._reader = pywrap_tensorflow.NewCheckpointReader(self.pretrain_model_path)
 
         self._parameters_config(trainable)
 
@@ -140,6 +139,6 @@ class C3D_Network(object):
         :param name:
         :return:
         """
-        assert name in self._var_to_shape_map.keys(), '找不着'+name+'参数'
-        return self._var_to_shape_map[name]
+        assert name in self._reader.get_variable_to_shape_map().keys(), '找不着'+name+'参数'
+        return self._reader.get_tensor(name)
 
