@@ -2,14 +2,16 @@ import tensorflow as tf
 from c3d_network import C3D_Network, class_label
 
 class Train_C3D_Network(object):
-    batch_size = 20
+
     depth = 16
     img_size = 112
     learning_rate = 0.0001
-    train_step = 5000
 
-    def __init__(self):
-        pass
+
+    def __init__(self, batch_size=20, train_step=5000, depth=16):
+        self.batch_size = batch_size
+        self.train_step = train_step
+        self.depth = depth
 
     def train(self):
         x = tf.placeholder(tf.float32, shape=[self.batch_size,
@@ -44,7 +46,7 @@ class Train_C3D_Network(object):
             for step in range(self.train_step):
                 train_x, train_y = get_next(self.batch_size)
 
-                sess.run(train_op, feed_dict={x: train_x, y: train_y})
+                sess.run(train_op, feed_dict={x: train_x, label: train_y})
                 if step%100 ==0:
-                    res = sess.run([total_loss, accuracy], feed_dict={x: train_x, y: train_y})
-                    print('accuracy: %6f ,total loss: %6f'%(res[1],res[0]))
+                    res = sess.run([total_loss, accuracy], feed_dict={x: train_x, label: train_y})
+                    print('accuracy: %6f ,total loss: %6f' % (res[1], res[0]))
