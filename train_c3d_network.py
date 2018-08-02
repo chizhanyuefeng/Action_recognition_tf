@@ -68,7 +68,7 @@ class Train_C3D_Network(object):
                     self.train_logger.info('step:%d, accuracy: %6f, total loss: %6f' % (step, res[1], res[0]))
                 if step%100 == 0:
                     save_path = saver.save(sess, self.model_save_path)
-                    self.train_logger.info('model saved at', save_path)
+                    self.train_logger.info('model saved at %s'% save_path)
 
             train_writer.close()
 
@@ -96,5 +96,5 @@ class Train_C3D_Network(object):
         self.train_logger.addHandler(consol_handler)
 
 if __name__=="__main__":
-    train = Train_C3D_Network(batch_size=20)
+    train = Train_C3D_Network(batch_size=15)
     train.train()

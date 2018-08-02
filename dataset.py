@@ -88,9 +88,9 @@ class Dataset(object):
 
 if __name__=="__main__":
 
-    a = Dataset(20, 16, 112)
+    a = Dataset(16, 112)
     start = time.time()
-    b, c= a.get_next_batch()
+    b, c= a.get_next_batch(20)
     print(c)
     during = time.time() - start
     print(during)
