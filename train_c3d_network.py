@@ -1,4 +1,6 @@
+import logging
 import tensorflow as tf
+from dataset import Dataset
 from c3d_network import C3D_Network, class_label
 
 class Train_C3D_Network(object):
@@ -7,7 +9,6 @@ class Train_C3D_Network(object):
     img_size = 112
     learning_rate = 0.0001
     model_save_path = './models/test_model/model.ckpt'
-
 
     def __init__(self, batch_size=20, train_step=5000, depth=16):
         self.batch_size = batch_size
@@ -43,16 +44,23 @@ class Train_C3D_Network(object):
 
         saver = tf.train.Saver()
 
+        data = Dataset(self.batch_size, self.depth, self.img_size)
+
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
 
             for step in range(1, self.train_step+1):
-                train_x, train_y = get_next(self.batch_size)
+                train_x, train_y = data.get_next_batch()
 
                 sess.run(train_op, feed_dict={x: train_x, label: train_y})
-                if step%100 ==0:
+                if step%1 ==0:
                     res = sess.run([total_loss, accuracy], feed_dict={x: train_x, label: train_y})
-                    print('step:%d, accuracy: %6f, total loss: %6f' % (step,res[1], res[0]))
-                if step%1000 == 0:
+                    print('step:%d, accuracy: %6f, total loss: %6f' % (step, res[1], res[0]))
+                if step%100 == 0:
                     save_path = saver.save(sess, self.model_save_path)
-                    print('model saved at',self.model_save_path)
+                    print('model saved at', save_path)
+
+
+if __name__=="__main__":
+    train = Train_C3D_Network(batch_size=10)
+    train.train()
