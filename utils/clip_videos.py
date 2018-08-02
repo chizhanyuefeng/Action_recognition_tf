@@ -17,7 +17,13 @@ def save_frames_from_video(video_path, save_path, frames_space):
             break
         if n%frames_space == 0:
             i = i + 1
-            cv2.imwrite(save_path + str(i)+'.jpg', img)
+            if i>9 and i<100:
+                name = save_path + '000' + str(i) + '.jpg'
+            elif i<10:
+                name = save_path + '0000' + str(i) + '.jpg'
+            else:
+                name = save_path + '00' + str(i) + '.jpg'
+            cv2.imwrite(name, img)
     capture.release()
 
 def extract_all_videos(path):
@@ -36,4 +42,5 @@ def extract_all_videos(path):
         else:
             extract_all_videos(cur_path)
 
-extract_all_videos(DATASET_PATH)
+if __name__=="__main__":
+    extract_all_videos(DATASET_PATH)
