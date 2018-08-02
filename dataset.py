@@ -14,6 +14,7 @@ class Dataset(object):
         self.batch_size = batch_size
         self.depth = depth
         self.img_size = img_size
+        self.epoch = 0
 
         train_data_paths = pd.read_csv(train_data_list_csv, index_col=False)
         self.train_data_num = train_data_paths.path.size
@@ -25,9 +26,6 @@ class Dataset(object):
 
         # 记录下次获取batch的位置
         self.train_next_pos = 0
-
-        img_path_list = self._get_img_path_list(self.train_data_paths[0][1])
-
 
     def _get_img_path_list(self, video_path):
         """
@@ -68,7 +66,11 @@ class Dataset(object):
 
             img_path_list = self._get_img_path_list(self.train_data_paths[self.train_next_pos][1])
             frames_num = len(img_path_list)
-            self.train_next_pos += 1
+            if self.train_next_pos == self.train_data_num-1:
+                self.train_next_pos = 0
+                self.epoch += 1
+            else:
+                self.train_next_pos += 1
 
             #print(img_path_list)
             assert frames_num-self.depth>=0, print(frames_num,img_path_list)
