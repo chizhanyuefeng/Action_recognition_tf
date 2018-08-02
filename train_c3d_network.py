@@ -6,6 +6,7 @@ class Train_C3D_Network(object):
     depth = 16
     img_size = 112
     learning_rate = 0.0001
+    model_save_path = './models/test_model/model.ckpt'
 
 
     def __init__(self, batch_size=20, train_step=5000, depth=16):
@@ -40,13 +41,18 @@ class Train_C3D_Network(object):
             correct_prediction = tf.cast(correct_prediction, tf.float32)
             accuracy = tf.reduce_mean(correct_prediction)
 
+        saver = tf.train.Saver()
+
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
 
-            for step in range(self.train_step):
+            for step in range(1, self.train_step+1):
                 train_x, train_y = get_next(self.batch_size)
 
                 sess.run(train_op, feed_dict={x: train_x, label: train_y})
                 if step%100 ==0:
                     res = sess.run([total_loss, accuracy], feed_dict={x: train_x, label: train_y})
-                    print('accuracy: %6f ,total loss: %6f' % (res[1], res[0]))
+                    print('step:%d, accuracy: %6f, total loss: %6f' % (step,res[1], res[0]))
+                if step%1000 == 0:
+                    save_path = saver.save(sess, self.model_save_path)
+                    print('model saved at',self.model_save_path)
