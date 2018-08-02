@@ -10,3 +10,8 @@
 
 # model
 *.model
+*ckpt*
+check*
+
+# tensorboard
+events*
