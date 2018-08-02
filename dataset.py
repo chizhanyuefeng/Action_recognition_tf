@@ -10,8 +10,7 @@ validation_list_csv = './list/validation_data.csv'
 
 class Dataset(object):
 
-    def __init__(self, batch_size, depth, img_size):
-        self.batch_size = batch_size
+    def __init__(self, depth, img_size):
         self.depth = depth
         self.img_size = img_size
         self.epoch = 0
@@ -22,7 +21,7 @@ class Dataset(object):
         self.validation_data_num = validation_data_paths.path.size
         # 洗牌
         self.train_data_paths = train_data_paths.sample(frac=1).values
-        self.validation_data_paths = validation_data_paths.sample(frac=1)
+        self.validation_data_paths = validation_data_paths.sample(frac=1).values
 
         # 记录下次获取batch的位置
         self.train_next_pos = 0
@@ -52,13 +51,13 @@ class Dataset(object):
 
         return img_np
 
-    def get_next_batch(self):
-        img_batch = np.zeros(shape=[self.batch_size, self.depth,
+    def get_next_batch(self, batch_size):
+        img_batch = np.zeros(shape=[batch_size, self.depth,
                                     self.img_size, self.img_size,
                                     3])
-        img_label = np.zeros(shape=[self.batch_size, 45])
+        img_label = np.zeros(shape=[batch_size, 45])
 
-        for i in range(self.batch_size):
+        for i in range(batch_size):
             label = int(self.train_data_paths[self.train_next_pos][0])
             label_list = [0 for _ in range(45)]
             label_list[label] = 1

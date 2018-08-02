@@ -18,13 +18,13 @@ class Train_C3D_Network(object):
         self._train_logger_init()
 
     def train(self):
-        x = tf.placeholder(tf.float32, shape=[self.batch_size,
+        x = tf.placeholder(tf.float32, shape=[None,
                                               self.depth,
                                               self.img_size,
                                               self.img_size,
                                               3])
 
-        label = tf.placeholder(tf.float32, shape=[self.batch_size, len(class_label.keys())])
+        label = tf.placeholder(tf.float32, shape=[None, len(class_label.keys())])
         network = C3D_Network(x, self.batch_size, dropout_prob=1, trainable=True)
         net_predict = network.contruct_graph()
 
@@ -51,14 +51,14 @@ class Train_C3D_Network(object):
         # tensorboard
         merged = tf.summary.merge_all()
 
-        data = Dataset(self.batch_size, self.depth, self.img_size)
+        data = Dataset(self.depth, self.img_size)
 
         with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
             train_writer = tf.summary.FileWriter("./tensorboard_logs/", sess.graph)
 
             for step in range(1, self.train_step+1):
-                train_x, train_y = data.get_next_batch()
+                train_x, train_y = data.get_next_batch(self.batch_size)
                 sess.run(train_op, feed_dict={x: train_x, label: train_y})
                 summ = sess.run(merged, feed_dict={x: train_x, label: train_y})
                 train_writer.add_summary(summ, global_step=step)
@@ -94,7 +94,6 @@ class Train_C3D_Network(object):
         consol_formatter = logging.Formatter('%(message)s')
         consol_handler.setFormatter(consol_formatter)
         self.train_logger.addHandler(consol_handler)
-
 
 if __name__=="__main__":
     train = Train_C3D_Network(batch_size=20)

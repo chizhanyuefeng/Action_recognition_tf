@@ -64,7 +64,7 @@ class C3D_Network(object):
 
         # Fully connected layer
         pool5 = tf.transpose(pool5, perm=[0, 1, 4, 2, 3])
-        dense1 = tf.reshape(pool5, [self._batch_size, self._weights['wd1'].get_shape().as_list()[0]])  # Reshape conv3 output to fit dense layer input
+        dense1 = tf.reshape(pool5, [-1, self._weights['wd1'].get_shape().as_list()[0]])  # Reshape conv3 output to fit dense layer input
         dense1 = tf.matmul(dense1, self._weights['wd1']) + self._biases['bd1']
 
         dense1 = tf.nn.relu(dense1, name='fc1')  # Relu activation
