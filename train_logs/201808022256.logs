@@ -1,0 +1,10 @@
+2018-08-02 22:56:42,955 - train_c3d_network.py[line:60] - INFO: step:1, accuracy: 0.000000, total loss: 48.130131
+2018-08-02 22:56:44,742 - train_c3d_network.py[line:60] - INFO: step:2, accuracy: 0.000000, total loss: 58.634243
+2018-08-02 22:56:46,595 - train_c3d_network.py[line:60] - INFO: step:3, accuracy: 0.000000, total loss: 59.657967
+2018-08-02 22:56:48,941 - train_c3d_network.py[line:60] - INFO: step:4, accuracy: 0.000000, total loss: 54.333351
+2018-08-02 22:56:50,707 - train_c3d_network.py[line:60] - INFO: step:5, accuracy: 0.000000, total loss: 81.628441
+2018-08-02 22:56:52,550 - train_c3d_network.py[line:60] - INFO: step:6, accuracy: 0.000000, total loss: 79.153923
+2018-08-02 22:56:54,373 - train_c3d_network.py[line:60] - INFO: step:7, accuracy: 0.100000, total loss: 44.498878
+2018-08-02 22:56:56,132 - train_c3d_network.py[line:60] - INFO: step:8, accuracy: 0.000000, total loss: 47.269424
+2018-08-02 22:56:57,865 - train_c3d_network.py[line:60] - INFO: step:9, accuracy: 0.100000, total loss: 45.187340
+2018-08-02 22:56:59,666 - train_c3d_network.py[line:60] - INFO: step:10, accuracy: 0.100000, total loss: 43.050385
