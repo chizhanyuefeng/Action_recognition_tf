@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.python import pywrap_tensorflow
 
 class_label = {"Archery": 0, "BabyCrawling": 1, "BasketballShooting": 2, "BenchPress": 3, "Biking": 4,
-               "BlowingCandles": 5, "Bowling": 6, "BreatStroke": 7, "CleanAndJerk": 8, "CliffDiving": 9,
+               "BlowingCandles": 5, "Bowling": 6, "BreastStroke": 7, "CleanAndJerk": 8, "CliffDiving": 9,
                "Drumming": 10, "FrisbeeCatch": 11, "GolfSwing": 12, "Haircut": 13, "HeadMassage": 14,
                "HighJump": 15, "HorseRiding": 16, "Hug": 17, "HulaHoop": 18, "JumpRope": 19,
                "Kayaking": 20, "Kiss": 21, "Laugh": 22, "LongJump": 23, "Marching": 24,
