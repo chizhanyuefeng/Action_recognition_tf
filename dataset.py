@@ -1,4 +1,5 @@
 import os
+import time
 import cv2
 import pandas as pd
 import numpy as np
@@ -29,9 +30,13 @@ class Dataset(object):
 
 
     def _get_img_path_list(self, video_path):
-
+        """
+        获取当前从这个视频中提取的帧图像的路径
+        :param video_path:
+        :return:
+        """
         img_path = os.listdir(video_path)
-        img_path = sorted(img_path)
+        img_path.sort()
         img_path = [os.path.join(video_path, _) for _ in img_path]
 
         return img_path
@@ -54,13 +59,20 @@ class Dataset(object):
         img_batch = np.zeros(shape=[self.batch_size, self.depth,
                                     self.img_size, self.img_size,
                                     3])
-        img_label = np.zeros(shape=[self.batch_size])
+        img_label = np.zeros(shape=[self.batch_size, 45])
 
         for i in range(self.batch_size):
-            img_label[i] = self.train_data_paths[self.train_next_pos][0]
+            label = int(self.train_data_paths[self.train_next_pos][0])
+            label_list = [0 for _ in range(45)]
+            label_list[label] = 1
+            img_label[i] = np.array(label_list)
+
             img_path_list = self._get_img_path_list(self.train_data_paths[self.train_next_pos][1])
-            self.train_next_pos += 1
             frames_num = len(img_path_list)
+            self.train_next_pos += 1
+
+            #print(img_path_list)
+            assert frames_num-self.depth>0, print(frames_num,img_path_list)
             start = np.random.randint(0, frames_num-self.depth)
             for j in range(self.depth):
                 img = self._read_img(img_path_list[start+j])
@@ -72,7 +84,10 @@ class Dataset(object):
         pass
 
 if __name__=="__main__":
-    a = Dataset(4,1,112)
 
+    a = Dataset(20, 16, 112)
+    start = time.time()
     b, c= a.get_next_batch()
     print(c)
+    during = time.time() - start
+    print(during)
