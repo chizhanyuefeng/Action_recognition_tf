@@ -2,8 +2,8 @@ import os
 import cv2
 
 DATASET_PATH = '/home/tony/motion_research/FutureCamp_ActionRecognitionData_TrainVal'
-SAVE_PATH = '../dataset/'
-FRAMES_SPACE = 3
+SAVE_PATH = '../../dataset/'
+FRAMES_SPACE = 1
 
 def save_frames_from_video(video_path, save_path, frames_space):
     capture = cv2.VideoCapture(video_path)
