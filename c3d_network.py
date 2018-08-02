@@ -110,7 +110,7 @@ class C3D_Network(object):
         :param bias:
         :return:
         """
-        res_conv = tf.nn.conv3d(input, filter, [1, 1, 1, 1], padding="SAME", name=name)
+        res_conv = tf.nn.conv3d(input, filter, [1, 1, 1, 1, 1], padding="SAME", name=name)
         res = tf.nn.bias_add(res_conv, bias)
         return res
     def _max_pool(self, name, input, k):
