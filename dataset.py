@@ -54,7 +54,6 @@ class Dataset(object):
 
         return img_np
 
-
     def get_next_batch(self):
         img_batch = np.zeros(shape=[self.batch_size, self.depth,
                                     self.img_size, self.img_size,
@@ -72,8 +71,11 @@ class Dataset(object):
             self.train_next_pos += 1
 
             #print(img_path_list)
-            assert frames_num-self.depth>0, print(frames_num,img_path_list)
-            start = np.random.randint(0, frames_num-self.depth)
+            assert frames_num-self.depth>=0, print(frames_num,img_path_list)
+            if frames_num-self.depth == 0:
+                start = 0
+            else:
+                start = np.random.randint(0, frames_num-self.depth+1)
             for j in range(self.depth):
                 img = self._read_img(img_path_list[start+j])
                 img_batch[i, j, :, :, :] = img
