@@ -11,10 +11,12 @@ class Train_C3D_Network(object):
     learning_rate = 0.0001
     model_save_path = './models/test_model/model.ckpt'
 
-    def __init__(self, batch_size=20, train_step=5000, depth=16):
+    def __init__(self, batch_size=20, train_step=5000, depth=16, pretrain=False):
         self.batch_size = batch_size
         self.train_step = train_step
         self.depth = depth
+        self.pretrain = pretrain
+
         self._train_logger_init()
 
     def train(self):
@@ -60,7 +62,11 @@ class Train_C3D_Network(object):
         data = Dataset(self.depth, self.img_size)
 
         with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
+            if self.pretrain:
+                saver.restore(sess, "./models/test_model/model.ckpt")
+            else:
+                sess.run(tf.global_variables_initializer())
+
             train_writer = tf.summary.FileWriter("./tensorboard_logs/", sess.graph)
 
             for step in range(1, self.train_step+1):
@@ -112,5 +118,5 @@ class Train_C3D_Network(object):
         self.train_logger.addHandler(consol_handler)
 
 if __name__=="__main__":
-    train = Train_C3D_Network(batch_size=15)
+    train = Train_C3D_Network(batch_size=15, pretrain=False)
     train.train()

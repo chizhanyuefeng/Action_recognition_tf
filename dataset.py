@@ -21,6 +21,7 @@ class Dataset(object):
         self.epoch = 0
         self.validation_epoch = 0
 
+
         train_data_paths = pd.read_csv(train_data_list_csv, index_col=False)
         self.train_data_num = train_data_paths.path.size
         validation_data_paths = pd.read_csv(validation_list_csv, index_col=False)
