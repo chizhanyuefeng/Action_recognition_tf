@@ -25,9 +25,10 @@ class Train_C3D_Network(object):
                                               self.img_size,
                                               self.img_size,
                                               3])
-
+        dropout_pro = tf.placeholder(tf.float32)
         label = tf.placeholder(tf.float32, shape=[None, len(class_label.keys())])
-        network = C3D_Network(x, self.batch_size, dropout_prob=1, trainable=True)
+
+        network = C3D_Network(x, dropout_pro, self.batch_size, trainable=True)
         net_predict = network.contruct_graph()
 
         # 计算loss
@@ -71,12 +72,12 @@ class Train_C3D_Network(object):
             epoch = 0
             for step in range(1, self.train_step+1):
                 train_x, train_y = data.get_next_batch(self.batch_size)
-                sess.run(train_op, feed_dict={x: train_x, label: train_y})
-                summ = sess.run(merged, feed_dict={x: train_x, label: train_y})
+                sess.run(train_op, feed_dict={x: train_x, label: train_y, dropout_pro: 0.5})
+                summ = sess.run(merged, feed_dict={x: train_x, label: train_y, dropout_pro: 0.5})
                 train_writer.add_summary(summ, global_step=step)
 
                 if step%5 ==0:
-                    res = sess.run([total_loss, train_accuracy], feed_dict={x: train_x, label: train_y})
+                    res = sess.run([total_loss, train_accuracy], feed_dict={x: train_x, label: train_y, dropout_pro: 1})
                     self.train_logger.info('step:%d, train accuracy: %6f, total loss: %6f' % (step, res[1], res[0]))
 
                 if step%100 == 0:
@@ -86,7 +87,7 @@ class Train_C3D_Network(object):
                     while data.validation_epoch == 0:
                         num += 1
                         valation_x, valation_y = data.get_valiation_data(10)
-                        res = sess.run(valation_accuracy, feed_dict={x: valation_x, label: valation_y})
+                        res = sess.run(valation_accuracy, feed_dict={x: valation_x, label: valation_y, dropout_pro: 1})
                         total_acc += res
                     data.validation_epoch = 0
                     self.train_logger.info('step:%d, validation accuracy: %6f' % (step, total_acc/num))
@@ -101,7 +102,7 @@ class Train_C3D_Network(object):
                     while data.validation_epoch == 0:
                         num += 1
                         valation_x, valation_y = data.get_valiation_data(10)
-                        res = sess.run(valation_accuracy, feed_dict={x: valation_x, label: valation_y})
+                        res = sess.run(valation_accuracy, feed_dict={x: valation_x, label: valation_y, dropout_pro: 1})
                         total_acc += res
                     data.validation_epoch = 0
                     self.train_logger.info('step:%d, validation accuracy: %6f' % (step, total_acc / num))
@@ -134,5 +135,5 @@ class Train_C3D_Network(object):
         self.train_logger.addHandler(consol_handler)
 
 if __name__=="__main__":
-    train = Train_C3D_Network(batch_size=15, pretrain=False)
+    train = Train_C3D_Network(batch_size=15, pretrain=True)
     train.train()

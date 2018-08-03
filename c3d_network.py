@@ -15,7 +15,7 @@ class C3D_Network(object):
     num_classes = len(class_label.keys())
     pretrain_model_path = './models/pretrain/sports1m_finetuning_ucf101.model'
 
-    def __init__(self, x, batchsize, dropout_prob=1, trainable=False):
+    def __init__(self, x, dropout_prob, batchsize, trainable=False, punish_lambda=None):
         """
         构造函数
         :param x:
@@ -28,6 +28,7 @@ class C3D_Network(object):
         self._x = x
         self._batch_size = batchsize
         self._dropout_prob = dropout_prob
+        self._lambda = punish_lambda
         self._parameters_config(trainable)
 
     def contruct_graph(self):
@@ -84,16 +85,14 @@ class C3D_Network(object):
         :param trainable: 如果是true，有惩罚参数，否则无惩罚参数
         :return:
         """
-        if trainable:
-            punish_lambda = 0.0005
-        else:
-            punish_lambda = None
+        if not trainable:
+            self._lambda = None
 
         with tf.variable_scope('var_name'):
             self._weights = {
-                'wd1': self._variable_with_weight_decay('wd1', [8192, 4096], 0.04, punish_lambda),
-                'wd2': self._variable_with_weight_decay('wd2', [4096, 1024], 0.04, punish_lambda),
-                'out': self._variable_with_weight_decay('wout', [1024, self.num_classes], 0.04, punish_lambda)
+                'wd1': self._variable_with_weight_decay('wd1', [8192, 4096], 0.04, self._lambda),
+                'wd2': self._variable_with_weight_decay('wd2', [4096, 1024], 0.04, self._lambda),
+                'out': self._variable_with_weight_decay('wout', [1024, self.num_classes], 0.04, self._lambda)
             }
             self._biases = {
                 'bd1': self._variable_with_weight_decay('bd1', [4096], 0.04, None),
