@@ -50,9 +50,9 @@ class Train_C3D_Network(object):
             train_accuracy = tf.reduce_mean(correct_prediction)
             tf.summary.scalar("train_accuracy", train_accuracy)
 
-        with tf.name_scope('valation_accuracy'):
+        with tf.name_scope('validation_accuracy'):
             valation_accuracy = tf.reduce_mean(correct_prediction)
-            tf.summary.scalar("valation_accuracy", valation_accuracy)
+            tf.summary.scalar("validation_accuracy", valation_accuracy)
 
         # 保存模型
         saver = tf.train.Saver()
@@ -68,7 +68,7 @@ class Train_C3D_Network(object):
                 sess.run(tf.global_variables_initializer())
 
             train_writer = tf.summary.FileWriter("./tensorboard_logs/", sess.graph)
-
+            epoch = 0
             for step in range(1, self.train_step+1):
                 train_x, train_y = data.get_next_batch(self.batch_size)
                 sess.run(train_op, feed_dict={x: train_x, label: train_y})
@@ -78,6 +78,7 @@ class Train_C3D_Network(object):
                 if step%5 ==0:
                     res = sess.run([total_loss, train_accuracy], feed_dict={x: train_x, label: train_y})
                     self.train_logger.info('step:%d, train accuracy: %6f, total loss: %6f' % (step, res[1], res[0]))
+
                 if step%100 == 0:
                     self.train_logger.info('正在计算验证集准确率...')
                     num = 0
@@ -88,9 +89,24 @@ class Train_C3D_Network(object):
                         res = sess.run(valation_accuracy, feed_dict={x: valation_x, label: valation_y})
                         total_acc += res
                     data.validation_epoch = 0
-                    self.train_logger.info('step:%d, valation accuracy: %6f' % (step, total_acc/num))
+                    self.train_logger.info('step:%d, validation accuracy: %6f' % (step, total_acc/num))
                     save_path = saver.save(sess, self.model_save_path)
                     self.train_logger.info('model saved at %s'% save_path)
+
+                if data.epoch != epoch:
+                    epoch = data.epoch
+                    self.train_logger.info('train epoch:%d,正在计算验证集准确率...' % (data.epoch))
+                    num = 0
+                    total_acc = 0
+                    while data.validation_epoch == 0:
+                        num += 1
+                        valation_x, valation_y = data.get_valiation_data(10)
+                        res = sess.run(valation_accuracy, feed_dict={x: valation_x, label: valation_y})
+                        total_acc += res
+                    data.validation_epoch = 0
+                    self.train_logger.info('step:%d, validation accuracy: %6f' % (step, total_acc / num))
+                    save_path = saver.save(sess, self.model_save_path)
+                    self.train_logger.info('model saved at %s' % save_path)
 
             train_writer.close()
 
