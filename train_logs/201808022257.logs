@@ -1,5 +1,0 @@
-2018-08-02 22:57:50,762 - train_c3d_network.py[line:60] - INFO: step:1, accuracy: 0.700000, total loss: 14.492866
-2018-08-02 22:57:52,546 - train_c3d_network.py[line:60] - INFO: step:2, accuracy: 0.600000, total loss: 13.958147
-2018-08-02 22:57:54,426 - train_c3d_network.py[line:60] - INFO: step:3, accuracy: 0.300000, total loss: 14.686761
-2018-08-02 22:57:56,150 - train_c3d_network.py[line:60] - INFO: step:4, accuracy: 0.300000, total loss: 18.210459
-2018-08-02 22:57:58,164 - train_c3d_network.py[line:60] - INFO: step:5, accuracy: 0.200000, total loss: 22.648499

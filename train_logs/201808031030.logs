@@ -1,0 +1,44 @@
+2018-08-03 10:31:11,957 - train_c3d_network.py[line:74] - INFO: step:5, train accuracy: 0.333333, total loss: 19.174135
+2018-08-03 10:31:27,918 - train_c3d_network.py[line:74] - INFO: step:10, train accuracy: 0.400000, total loss: 15.114034
+2018-08-03 10:31:44,511 - train_c3d_network.py[line:74] - INFO: step:15, train accuracy: 0.600000, total loss: 16.843454
+2018-08-03 10:32:00,232 - train_c3d_network.py[line:74] - INFO: step:20, train accuracy: 0.400000, total loss: 15.683990
+2018-08-03 10:32:15,705 - train_c3d_network.py[line:74] - INFO: step:25, train accuracy: 0.466667, total loss: 18.557549
+2018-08-03 10:32:31,268 - train_c3d_network.py[line:74] - INFO: step:30, train accuracy: 0.333333, total loss: 16.629078
+2018-08-03 10:32:48,060 - train_c3d_network.py[line:74] - INFO: step:35, train accuracy: 0.733333, total loss: 14.086821
+2018-08-03 10:33:12,043 - train_c3d_network.py[line:74] - INFO: step:40, train accuracy: 0.733333, total loss: 13.573868
+2018-08-03 10:33:32,659 - train_c3d_network.py[line:74] - INFO: step:45, train accuracy: 0.733333, total loss: 13.229523
+2018-08-03 10:33:50,028 - train_c3d_network.py[line:74] - INFO: step:50, train accuracy: 0.666667, total loss: 14.040299
+2018-08-03 10:34:06,624 - train_c3d_network.py[line:74] - INFO: step:55, train accuracy: 0.600000, total loss: 15.604612
+2018-08-03 10:34:21,979 - train_c3d_network.py[line:74] - INFO: step:60, train accuracy: 0.933333, total loss: 11.888735
+2018-08-03 10:34:38,014 - train_c3d_network.py[line:74] - INFO: step:65, train accuracy: 0.800000, total loss: 12.692985
+2018-08-03 10:34:55,944 - train_c3d_network.py[line:74] - INFO: step:70, train accuracy: 0.866667, total loss: 12.816617
+2018-08-03 10:35:13,082 - train_c3d_network.py[line:74] - INFO: step:75, train accuracy: 0.733333, total loss: 12.298312
+2018-08-03 10:35:30,765 - train_c3d_network.py[line:74] - INFO: step:80, train accuracy: 0.866667, total loss: 12.728939
+2018-08-03 10:35:47,493 - train_c3d_network.py[line:74] - INFO: step:85, train accuracy: 0.933333, total loss: 11.708532
+2018-08-03 10:36:03,748 - train_c3d_network.py[line:74] - INFO: step:90, train accuracy: 0.866667, total loss: 12.032125
+2018-08-03 10:36:20,300 - train_c3d_network.py[line:74] - INFO: step:95, train accuracy: 0.933333, total loss: 11.740964
+2018-08-03 10:36:36,997 - train_c3d_network.py[line:74] - INFO: step:100, train accuracy: 0.866667, total loss: 12.378010
+2018-08-03 10:36:36,997 - train_c3d_network.py[line:76] - INFO: 正在计算验证集准确率...
+2018-08-03 10:38:01,332 - train_c3d_network.py[line:84] - INFO: step:100, valation accuracy: 0.673770
+2018-08-03 10:38:14,257 - train_c3d_network.py[line:86] - INFO: model saved at ./models/test_model/model.ckpt
+2018-08-03 10:38:37,996 - train_c3d_network.py[line:74] - INFO: step:105, train accuracy: 0.733333, total loss: 12.596862
+2018-08-03 10:38:54,301 - train_c3d_network.py[line:74] - INFO: step:110, train accuracy: 0.800000, total loss: 12.007351
+2018-08-03 10:39:10,373 - train_c3d_network.py[line:74] - INFO: step:115, train accuracy: 0.800000, total loss: 12.944529
+2018-08-03 10:39:26,573 - train_c3d_network.py[line:74] - INFO: step:120, train accuracy: 0.466667, total loss: 14.012738
+2018-08-03 10:39:42,416 - train_c3d_network.py[line:74] - INFO: step:125, train accuracy: 0.800000, total loss: 14.111438
+2018-08-03 10:39:59,133 - train_c3d_network.py[line:74] - INFO: step:130, train accuracy: 1.000000, total loss: 11.368122
+2018-08-03 10:40:15,349 - train_c3d_network.py[line:74] - INFO: step:135, train accuracy: 0.866667, total loss: 12.142136
+2018-08-03 10:40:31,179 - train_c3d_network.py[line:74] - INFO: step:140, train accuracy: 0.800000, total loss: 11.754954
+2018-08-03 10:40:48,357 - train_c3d_network.py[line:74] - INFO: step:145, train accuracy: 0.866667, total loss: 11.861413
+2018-08-03 10:41:04,122 - train_c3d_network.py[line:74] - INFO: step:150, train accuracy: 0.733333, total loss: 13.076942
+2018-08-03 10:41:20,691 - train_c3d_network.py[line:74] - INFO: step:155, train accuracy: 0.933333, total loss: 12.985190
+2018-08-03 10:41:36,272 - train_c3d_network.py[line:74] - INFO: step:160, train accuracy: 0.866667, total loss: 12.047628
+2018-08-03 10:41:53,349 - train_c3d_network.py[line:74] - INFO: step:165, train accuracy: 0.866667, total loss: 11.683800
+2018-08-03 10:42:09,744 - train_c3d_network.py[line:74] - INFO: step:170, train accuracy: 0.800000, total loss: 12.913310
+2018-08-03 10:42:26,492 - train_c3d_network.py[line:74] - INFO: step:175, train accuracy: 0.800000, total loss: 11.956008
+2018-08-03 10:42:42,211 - train_c3d_network.py[line:74] - INFO: step:180, train accuracy: 0.933333, total loss: 11.603508
+2018-08-03 10:42:57,785 - train_c3d_network.py[line:74] - INFO: step:185, train accuracy: 1.000000, total loss: 11.209778
+2018-08-03 10:43:14,470 - train_c3d_network.py[line:74] - INFO: step:190, train accuracy: 0.933333, total loss: 12.111821
+2018-08-03 10:43:30,168 - train_c3d_network.py[line:74] - INFO: step:195, train accuracy: 0.800000, total loss: 12.438011
+2018-08-03 10:43:46,998 - train_c3d_network.py[line:74] - INFO: step:200, train accuracy: 0.866667, total loss: 11.631186
+2018-08-03 10:43:46,998 - train_c3d_network.py[line:76] - INFO: 正在计算验证集准确率...
