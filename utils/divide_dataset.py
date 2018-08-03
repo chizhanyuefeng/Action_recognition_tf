@@ -7,9 +7,15 @@ from c3d_network import class_label
 extracted_frames_path = '/home/tony/motion_research/dataset/'
 train_file = '../list/train_data.csv'
 validation_file = '../list/validation_data.csv'
-train_data_proportion = 0.9
 
-def divide_dataset(data_path):
+def divide_dataset(data_path, train_data_proportion=0.9):
+    """
+    数据集划分，根据训练集和测试集的划分比例进行划分，
+    将划分好的训练集数据绝对路径存放至train_file中，
+    验证集数据的绝对路径存放至validation_file中
+    :param data_path: 需要划分的数据集路径
+    :return:
+    """
 
     train_data_path = []
     train_data_class = []
@@ -24,7 +30,7 @@ def divide_dataset(data_path):
         if os.path.isdir(os.path.join(data_path, i)):
             # 划分训练和验证集的个数
             videos_num = len(os.listdir(os.path.join(data_path, i)))
-            train_data_num = int(videos_num * 0.9)
+            train_data_num = int(videos_num * train_data_proportion)
 
             videos_list = os.listdir(os.path.join(data_path, i))
 

@@ -9,6 +9,11 @@ train_data_list_csv = './list/train_data.csv'
 validation_list_csv = './list/validation_data.csv'
 
 class Dataset(object):
+    """
+    从划分好的数据集中提取所需数据。
+    获取训练数据，使用get_next_batch方法来得到
+    获取验证集，使用 get_valiation_data方法
+    """
 
     def __init__(self, depth, img_size):
         self.depth = depth
@@ -27,31 +32,6 @@ class Dataset(object):
         # 记录下次获取batch的位置
         self.train_next_pos = 0
         self.validation_next_pos = 0
-
-    def _get_img_path_list(self, video_path):
-        """
-        获取当前从这个视频中提取的帧图像的路径
-        :param video_path:
-        :return:
-        """
-        img_path = os.listdir(video_path)
-        img_path.sort()
-        img_path = [os.path.join(video_path, _) for _ in img_path]
-
-        return img_path
-
-    def _read_img(self, img_path):
-        """
-        获取一张图片
-        :param img_path:
-        :return: [112,112,3]
-        """
-        img = cv2.imread(img_path)
-        img = cv2.resize(img, (self.img_size, self.img_size))
-        img_RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img_np = np.asarray(img_RGB)
-
-        return img_np
 
     def get_next_batch(self, batch_size):
         img_batch = np.zeros(shape=[batch_size, self.depth,
@@ -105,7 +85,6 @@ class Dataset(object):
             else:
                 self.validation_next_pos += 1
 
-            #print(img_path_list)
             assert frames_num-self.depth >= 0, print(frames_num, img_path_list)
             if frames_num-self.depth == 0:
                 start = 0
@@ -116,6 +95,31 @@ class Dataset(object):
                 img_batch[i, j, :, :, :] = img
 
         return img_batch, img_label
+
+    def _get_img_path_list(self, video_path):
+        """
+        获取当前从这个视频中提取的帧图像的路径
+        :param video_path:
+        :return:
+        """
+        img_path = os.listdir(video_path)
+        img_path.sort()
+        img_path = [os.path.join(video_path, _) for _ in img_path]
+
+        return img_path
+
+    def _read_img(self, img_path):
+        """
+        获取一张图片，并将数据进行resize
+        :param img_path:
+        :return: [112,112,3]
+        """
+        img = cv2.imread(img_path)
+        img = cv2.resize(img, (self.img_size, self.img_size))
+        img_RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img_np = np.asarray(img_RGB)
+
+        return img_np
 
 if __name__=="__main__":
 

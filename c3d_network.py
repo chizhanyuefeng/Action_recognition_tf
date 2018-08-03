@@ -80,7 +80,7 @@ class C3D_Network(object):
 
     def _parameters_config(self, trainable):
         """
-        参数配置
+        训练参数配置
         :param trainable: 如果是true，有惩罚参数，否则无惩罚参数
         :return:
         """
