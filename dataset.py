@@ -14,6 +14,7 @@ class Dataset(object):
         self.depth = depth
         self.img_size = img_size
         self.epoch = 0
+        self.validation_epoch = 0
 
         train_data_paths = pd.read_csv(train_data_list_csv, index_col=False)
         self.train_data_num = train_data_paths.path.size
@@ -25,6 +26,7 @@ class Dataset(object):
 
         # 记录下次获取batch的位置
         self.train_next_pos = 0
+        self.validation_next_pos = 0
 
     def _get_img_path_list(self, video_path):
         """
@@ -72,7 +74,7 @@ class Dataset(object):
                 self.train_next_pos += 1
 
             #print(img_path_list)
-            assert frames_num-self.depth>=0, print(frames_num,img_path_list)
+            assert frames_num-self.depth >= 0, print(frames_num, img_path_list)
             if frames_num-self.depth == 0:
                 start = 0
             else:
@@ -83,14 +85,43 @@ class Dataset(object):
 
         return img_batch, img_label
 
-    def get_valiation_data(self):
-        pass
+    def get_valiation_data(self, batch_size):
+        img_batch = np.zeros(shape=[batch_size, self.depth,
+                                    self.img_size, self.img_size,
+                                    3])
+        img_label = np.zeros(shape=[batch_size, 45])
+
+        for i in range(batch_size):
+            label = int(self.validation_data_paths[self.validation_next_pos][0])
+            label_list = [0 for _ in range(45)]
+            label_list[label] = 1
+            img_label[i] = np.array(label_list)
+
+            img_path_list = self._get_img_path_list(self.validation_data_paths[self.validation_next_pos][1])
+            frames_num = len(img_path_list)
+            if self.validation_next_pos == self.validation_data_num-1:
+                self.validation_next_pos = 0
+                self.validation_epoch = 1
+            else:
+                self.validation_next_pos += 1
+
+            #print(img_path_list)
+            assert frames_num-self.depth >= 0, print(frames_num, img_path_list)
+            if frames_num-self.depth == 0:
+                start = 0
+            else:
+                start = np.random.randint(0, frames_num-self.depth+1)
+            for j in range(self.depth):
+                img = self._read_img(img_path_list[start+j])
+                img_batch[i, j, :, :, :] = img
+
+        return img_batch, img_label
 
 if __name__=="__main__":
 
     a = Dataset(16, 112)
     start = time.time()
-    b, c= a.get_next_batch(20)
+    b, c = a.get_next_batch(20)
     print(c)
     during = time.time() - start
     print(during)
