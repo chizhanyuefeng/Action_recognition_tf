@@ -33,6 +33,7 @@ def divide_dataset(data_path, train_data_proportion=0.9):
             train_data_num = int(videos_num * train_data_proportion)
 
             videos_list = os.listdir(os.path.join(data_path, i))
+            videos_list.sort()
 
             for p in range(train_data_num):
                 train_data_path.append(os.path.join(extracted_frames_path,i,videos_list[p]))
