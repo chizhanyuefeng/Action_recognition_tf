@@ -1,8 +1,8 @@
 import os
 import cv2
 
-DATASET_PATH = '/home/tony/motion_research/FutureCamp_ActionRecognitionData_TrainVal'
-SAVE_PATH = '../../dataset/'
+DATASET_PATH = '/home/tony/motion_research/FutureCamp_ActionRecognitionData_Test'
+SAVE_PATH = '../../test_dataset/'
 FRAMES_SPACE = 1
 
 def save_frames_from_video(video_path, save_path, frames_space):
@@ -18,11 +18,11 @@ def save_frames_from_video(video_path, save_path, frames_space):
         if n%frames_space == 0:
             i = i + 1
             if i>9 and i<100:
-                name = save_path + '000' + str(i) + '.jpg'
-            elif i<10:
                 name = save_path + '0000' + str(i) + '.jpg'
+            elif i<10:
+                name = save_path + '00000' + str(i) + '.jpg'
             else:
-                name = save_path + '00' + str(i) + '.jpg'
+                name = save_path + '000' + str(i) + '.jpg'
             cv2.imwrite(name, img)
     capture.release()
 
@@ -33,8 +33,11 @@ def extract_all_videos(path):
 
     for i in os.listdir(path):
         cur_path = path + "/" + i
-        if os.path.isfile(cur_path) and ('avi' in i):
-            video_name = cur_path.replace(DATASET_PATH, '').replace('.avi', '')
+        if os.path.isfile(cur_path) and ('mp4' in i or 'avi' in i):
+            if 'mp4' in i:
+                video_name = cur_path.replace(DATASET_PATH, '').replace('.mp4', '')
+            else:
+                video_name = cur_path.replace(DATASET_PATH, '').replace('.avi', '')
             save_path = SAVE_PATH + video_name + '/'
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
