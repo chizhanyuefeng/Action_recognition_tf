@@ -11,7 +11,7 @@ class Train_C3D_Network(object):
     learning_rate = 0.0001
     model_save_path = './models/test_model/model.ckpt'
 
-    def __init__(self, batch_size=20, train_step=5000, depth=16, pretrain=False):
+    def __init__(self, batch_size=20, train_step=10000, depth=16, pretrain=False):
         self.batch_size = batch_size
         self.train_step = train_step
         self.depth = depth
@@ -28,7 +28,7 @@ class Train_C3D_Network(object):
         dropout_pro = tf.placeholder(tf.float32)
         label = tf.placeholder(tf.float32, shape=[None, len(class_label.keys())])
 
-        network = C3D_Network(x, dropout_pro, self.batch_size, trainable=True)
+        network = C3D_Network(x, dropout_pro, trainable=True)
         net_predict = network.contruct_graph()
 
         # 计算loss
@@ -101,8 +101,8 @@ class Train_C3D_Network(object):
                     total_acc = 0
                     while data.validation_epoch == 0:
                         num += 1
-                        valation_x, valation_y = data.get_valiation_data(10)
-                        res = sess.run(valation_accuracy, feed_dict={x: valation_x, label: valation_y, dropout_pro: 1})
+                        validation_x, validation_y = data.get_valiation_data(10)
+                        res = sess.run(valation_accuracy, feed_dict={x: validation_x, label: validation_y, dropout_pro: 1})
                         total_acc += res
                     data.validation_epoch = 0
                     self.train_logger.info('step:%d, validation accuracy: %6f' % (step, total_acc / num))
@@ -135,5 +135,5 @@ class Train_C3D_Network(object):
         self.train_logger.addHandler(consol_handler)
 
 if __name__=="__main__":
-    train = Train_C3D_Network(batch_size=15, pretrain=True)
+    train = Train_C3D_Network(batch_size=15, pretrain=False)
     train.train()
