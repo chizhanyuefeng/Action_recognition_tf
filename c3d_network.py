@@ -15,18 +15,16 @@ class C3D_Network(object):
     num_classes = len(class_label.keys())
     pretrain_model_path = './models/pretrain/sports1m_finetuning_ucf101.model'
 
-    def __init__(self, x, dropout_prob, batchsize, trainable=False, punish_lambda=None):
+    def __init__(self, x, dropout_prob, trainable=False, punish_lambda=None):
         """
         构造函数
         :param x:
-        :param batchsize:
         :param dropout_prob:
         :param trainable:
         """
         # 获取训练的参数
         self._reader = pywrap_tensorflow.NewCheckpointReader(self.pretrain_model_path)
         self._x = x
-        self._batch_size = batchsize
         self._dropout_prob = dropout_prob
         self._lambda = punish_lambda
         self._parameters_config(trainable)
@@ -137,7 +135,7 @@ class C3D_Network(object):
 
     def _paramter(self, name):
         """
-        根据name从pretrain模型中加载数据
+        根据name从模型中加载参数数据
         :param name:
         :return:
         """
