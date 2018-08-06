@@ -23,7 +23,7 @@ class Run_C3D_model(object):
 
         saver = tf.train.Saver()
         #saver.restore(self._get_session(), "./models/test_model/model.ckpt")
-        saver.restore(self._get_session(), "/home/tony/motion_research/models/90/model.ckpt")
+        saver.restore(self._get_session(), "/home/tony/motion_research/models/re/model.ckpt")
 
     def _get_session(self):
         if self._sess is None:
@@ -112,23 +112,36 @@ if __name__ == "__main__":
 
     # test_vide = '/home/tony/motion_research/FutureCamp_ActionRecognitionData_Test/LongJump/lIF5SyZn-ZQ_000003_000013.mp4'
     # a.run_video_from_frames(test_vide)
+
+    res = []
+
     video_num = 0
     p = 0
-
     for i in os.listdir(test_path):
         video_class = class_label[i]
 
         for j in os.listdir(test_path+i):
+
             video_num += 1
             p_c = a.run_video_from_frames(test_path+i+'/'+j)
+            video_res = [p_c+1, j]
+            res.append(video_res)
+
             if p_c == -1:
-                print('视频太短:',j)
+                print('视频太短:', j)
                 continue
             if video_class == p_c:
                 p +=1
 
         print("当前%s准确度为%6f"%(i,p/video_num))
+
+    df = pd.DataFrame(res, columns=['label', 'filename'])
+    df.to_json('res.json', orient='records')
+
     print("最终准确度为%6f" % (p / video_num))
 
     during = time.time() - start
     print(during)
+
+
+
