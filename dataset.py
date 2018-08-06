@@ -130,3 +130,6 @@ if __name__=="__main__":
     print(c)
     during = time.time() - start
     print(during)
+    # data = pd.read_json('./33.36.json', orient='records')
+    # data.label = data.label+1
+    # data.to_json('./33.36.json', orient='records')

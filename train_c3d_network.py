@@ -8,7 +8,7 @@ class Train_C3D_Network(object):
 
     depth = 16
     img_size = 112
-    learning_rate = 0.0001
+    learning_rate = 0.00001
     model_save_path = './models/test_model/model.ckpt'
 
     def __init__(self, batch_size=20, train_step=10000, depth=16, pretrain=False):
@@ -90,9 +90,11 @@ class Train_C3D_Network(object):
                         res = sess.run(valation_accuracy, feed_dict={x: valation_x, label: valation_y, dropout_pro: 1})
                         total_acc += res
                     data.validation_epoch = 0
+
                     self.train_logger.info('step:%d, validation accuracy: %6f' % (step, total_acc/num))
                     save_path = saver.save(sess, self.model_save_path)
                     self.train_logger.info('model saved at %s'% save_path)
+
 
                 if data.epoch != epoch:
                     epoch = data.epoch
@@ -135,5 +137,5 @@ class Train_C3D_Network(object):
         self.train_logger.addHandler(consol_handler)
 
 if __name__=="__main__":
-    train = Train_C3D_Network(batch_size=15, pretrain=False)
+    train = Train_C3D_Network(batch_size=15, pretrain=True)
     train.train()
