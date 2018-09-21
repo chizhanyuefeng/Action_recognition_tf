@@ -1,10 +1,11 @@
 # Motion_recognition_tf
 Motion recognition
 
-见github
-https://github.com/chizhanyuefeng/Action_recognition_tf
+# 训练和验证数据集
+https://pan.baidu.com/s/1_59uKw51iCXKYxeXidv4bg
 
 ## 如何训练
+训练前需要将视频数据进行切分
 
 python3 train_c3d_network.py
 
